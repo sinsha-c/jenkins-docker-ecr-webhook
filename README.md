@@ -71,7 +71,8 @@ jenkins-docker-ecr-webhook/
 git clone https://github.com/<your-username>/jenkins-docker-ecr-webhook.git
 ```
 
-> 📸 **Add screenshot here:** GitHub repository page showing the three uploaded files.
+> GitHub repository page showing the three uploaded files.
+> <img src="screenshots/github-initial-commit" width="700"/>
 
 ---
 
@@ -106,12 +107,20 @@ docker run -d -p 8081:80 nginx-webapp
 curl http://localhost:8081
 ```
 
-> 📸 **Add screenshot here:** Browser view of the running Nginx page.
+> Browser view of the running Nginx page.
+> <img src="screenshots/nginx-running-page" width="700"/>
 
 ---
 
 ## Part 3 – Jenkins Declarative Pipeline
-
+### Prerequisite: Create the ECR Repository
+ 
+Pushing an image does **not** auto-create the repository — do this once, before the first pipeline run, or the push stage fails with `repository ... does not exist`:
+```bash
+aws ecr create-repository --repository-name nginx-webapp --region ap-south-1
+```
+Or via console: **ECR → Repositories → Create repository** → name `nginx-webapp` → Create.
+ 
 The `Jenkinsfile` defines four stages: checkout, build, smoke test, and push to ECR.
 
 ```groovy
@@ -120,6 +129,7 @@ pipeline {
 
     environment {
         AWS_REGION     = 'ap-south-1'
+        ECR_LOGIN       = '<aws-account-id>.dkr.ecr.ap-south-1.amazonaws.com'
         ECR_REPO       = '<aws-account-id>.dkr.ecr.ap-south-1.amazonaws.com/nginx-webapp'
         IMAGE_TAG      = "${BUILD_NUMBER}"
     }
@@ -151,7 +161,7 @@ pipeline {
         stage('Push to Amazon ECR') {
             steps {
                 sh """
-                    aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
+                    aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_LOGIN}
                     docker tag nginx-webapp:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}
                     docker push ${ECR_REPO}:${IMAGE_TAG}
                 """
@@ -173,11 +183,20 @@ pipeline {
 **Jenkins setup steps:**
 1. Installed the Docker Pipeline and Amazon ECR plugins.
 2. Configured AWS credentials in Jenkins (IAM user with ECR push permissions).
-3. Created a new Pipeline job pointing to the GitHub repository, using the `Jenkinsfile` from SCM.
+3. Created a new Pipeline job — suggested name: nginx-webapp-cicd-pipeline — pointing to the GitHub repository, using the Jenkinsfile from SCM.
 
-> 📸 **Add screenshot here:** Jenkins pipeline configuration page (Pipeline script from SCM).
+> Jenkins pipeline configuration page (Pipeline script from SCM).
+> <img src="screenshots/jenkins-job-config1" width="600"/>
 
-> 📸 **Add screenshot here:** Successful pipeline run showing all four stages green.
+> Jenkins job "Build Triggers" section with the GitHub hook option checked.
+> <img src="screenshots/jenkins-job-config1" width="600"/>
+
+### AWS Authentication — IAM Role Attached to EC2 (Recommended)
+ 
+1. IAM → Roles → Create role → Trusted entity: AWS service → Use case: EC2
+2. Attach policy: `AmazonEC2ContainerRegistryPowerUser`
+3. Name it (e.g. `jenkins-ecr-role`) → Create role
+4. EC2 → Instances → select Jenkins instance → Actions → Security → Modify IAM role → choose `jenkins-ecr-role` → Update
 
 ---
 
@@ -189,13 +208,35 @@ pipeline {
 4. Trigger: **Just the push event**.
 5. In the Jenkins job: enabled **GitHub hook trigger for GITScm polling** under Build Triggers.
 
-> 📸 **Add screenshot here:** GitHub webhook configuration screen with a green checkmark (successful delivery).
-
-> 📸 **Add screenshot here:** Jenkins job "Build Triggers" section with the GitHub hook option checked.
+> GitHub webhook configuration screen with a green checkmark (successful delivery).
+> <img src="screenshots/webhook-config" width="700"/>
 
 ---
 
 ## Part 5 – Verification
+
+1. Making a change in index.html
+2. Push the changes to github repo
+
+> git push to test the trigger
+> <img src="screenshots/git-push-to-test-trigger" width="700"/>
+
+---
+
+> Successful pipeline run from jenkins.
+> <img src="screenshots/jenkins-job-success" width="700"/>
+
+---
+
+> Amazon ECR repository showing the pushed image tag(s).
+> <img src="screenshots/image-on-ecr    " width="700"/>
+
+---
+
+> GitHub "Recent Deliveries" tab under webhook settings, showing a `200` response.
+> <img src="screenshots/webhook-delivery-status" width="700"/>
+
+---
 
 | Check                                   | Result |
 |------------------------------------------|--------|
@@ -204,10 +245,6 @@ pipeline {
 | Smoke test passes (container responds)    | ✅ Verified |
 | Image appears in Amazon ECR               | ✅ Verified |
 | No manual Jenkins job execution required  | ✅ Verified |
-
-> 📸 **Add screenshot here:** Amazon ECR repository showing the pushed image tag(s).
-
-> 📸 **Add screenshot here:** GitHub "Recent Deliveries" tab under webhook settings, showing a `200` response.
 
 ---
 
