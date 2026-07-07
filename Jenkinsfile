@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION     = 'ap-south-1'
+        ECR_LOGIN      = '489109585956.dkr.ecr.ap-south-1.amazonaws.com'
         ECR_REPO       = '489109585956.dkr.ecr.ap-south-1.amazonaws.com/nginx-webapp'
         IMAGE_TAG      = "${BUILD_NUMBER}"
     }
@@ -34,7 +35,7 @@ pipeline {
         stage('Push to Amazon ECR') {
             steps {
                 sh """
-                    aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
+                    aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_LOGIN}
                     docker tag nginx-webapp:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}
                     docker push ${ECR_REPO}:${IMAGE_TAG}
                 """
