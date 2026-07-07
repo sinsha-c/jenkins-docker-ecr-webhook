@@ -15,9 +15,10 @@ This project automates the full build-and-release workflow for a company website
 ---
 
 ## 🏗️ Architecture
-> A simple architecture diagram or the Jenkins pipeline stage view showing the end-to-end flow.
 
-> <img src="screenshots/cicd_pipeline_architecture.png" width="700"/>
+A simple architecture diagram or the Jenkins pipeline stage view showing the end-to-end flow.
+
+<img src="screenshots/cicd_pipeline_architecture.png" width="600"/>
 
 ---
 
