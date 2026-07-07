@@ -107,7 +107,14 @@ Pushing an image does **not** auto-create the repository — do this once, befor
 aws ecr create-repository --repository-name nginx-webapp --region ap-south-1
 ```
 Or via console: **ECR → Repositories → Create repository** → name `nginx-webapp` → Create.
+
+### AWS Authentication — IAM Role Attached to EC2 (Recommended)
  
+1. IAM → Roles → Create role → Trusted entity: AWS service → Use case: EC2
+2. Attach policy: `AmazonEC2ContainerRegistryPowerUser`
+3. Name it (e.g. `jenkins-ecr-role`) → Create role
+4. EC2 → Instances → select Jenkins instance → Actions → Security → Modify IAM role → choose `jenkins-ecr-role` → Update
+
 The `Jenkinsfile` defines four stages: checkout, build, smoke test, and push to ECR.
 
 ```groovy
@@ -165,25 +172,19 @@ pipeline {
         }
     }
 }
+
 ```
 
 **Jenkins setup steps:**
 1. Installed the Docker Pipeline and Amazon ECR plugins.
 2. Configured AWS credentials in Jenkins (IAM user with ECR push permissions).
-3. Created a new Pipeline job — suggested name: nginx-webapp-cicd-pipeline — pointing to the GitHub repository, using the Jenkinsfile from SCM.
+3. Created a new Pipeline job — job name: nginx-webapp-cicd-pipeline — pointing to the GitHub repository, using the Jenkinsfile from SCM.
 
 > Jenkins pipeline configuration page (Pipeline script from SCM).
 > <img src="screenshots/jenkins-job-config1.png" width="600"/>
 
 > Jenkins job "Build Triggers" section with the GitHub hook option checked.
 > <img src="screenshots/jenkins-job-config1.png" width="600"/>
-
-### AWS Authentication — IAM Role Attached to EC2 (Recommended)
- 
-1. IAM → Roles → Create role → Trusted entity: AWS service → Use case: EC2
-2. Attach policy: `AmazonEC2ContainerRegistryPowerUser`
-3. Name it (e.g. `jenkins-ecr-role`) → Create role
-4. EC2 → Instances → select Jenkins instance → Actions → Security → Modify IAM role → choose `jenkins-ecr-role` → Update
 
 ---
 
