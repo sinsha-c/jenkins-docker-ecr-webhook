@@ -5,7 +5,7 @@
 ![AWS ECR](https://img.shields.io/badge/AWS-ECR-FF9900?logo=amazonaws&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 
-## 📌 Project Overview
+## Project Overview
 
 This project automates the full build-and-release workflow for a company website. Instead of manually building and pushing Docker images every time developers commit code, a GitHub webhook triggers a Jenkins pipeline that builds the image, runs a smoke test to confirm the app starts correctly, and pushes the verified image to Amazon ECR — with zero manual Jenkins job execution.
 
@@ -14,7 +14,7 @@ This project automates the full build-and-release workflow for a company website
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 A simple architecture diagram or the Jenkins pipeline stage view showing the end-to-end flow.
 
@@ -22,7 +22,7 @@ A simple architecture diagram or the Jenkins pipeline stage view showing the end
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 | Category            | Tool                     |
 |---------------------|--------------------------|
@@ -35,7 +35,7 @@ A simple architecture diagram or the Jenkins pipeline stage view showing the end
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 jenkins-docker-ecr-webhook/
@@ -235,7 +235,7 @@ pipeline {
 
 ---
 
-## 🔧 Troubleshooting Notes
+## Troubleshooting Notes
 
 - **Webhook not triggering the build:** confirm the Jenkins URL is reachable from the internet (or GitHub, if self-hosted) and that the payload URL ends in `/github-webhook/`.
 - **Smoke test failing intermittently:** increase the `sleep` duration to give Nginx more time to start before the `curl` check.
@@ -243,7 +243,7 @@ pipeline {
 
 ---
 
-## 🎯 Key Learnings
+## Key Learnings
 
 - Designing a Declarative Jenkins Pipeline with clearly separated build, test, and deploy stages.
 - Using a smoke test as a lightweight quality gate before pushing an image.
@@ -252,10 +252,11 @@ pipeline {
 
 ---
 
-## 👤 Author
+## Author
 
 **Sinsha C**
-Senior DevOps Engineer | AWS · Kubernetes · Terraform · Jenkins · CI/CD
-🔗 [LinkedIn](https://linkedin.com/in/sinshac/) · [GitHub](https://github.com/sinsha-c)
 
-#AWSDevOpsRestartJourney
+[![GitHub](https://img.shields.io/badge/GitHub-sinsha--c-181717?style=flat&logo=github&logoColor=white)](https://github.com/sinsha-c)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-sinshac-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://linkedin.com/in/sinshac)
+
+---
