@@ -75,7 +75,7 @@ A minimal static website served through Nginx.
     <title>DevOps CI/CD Demo</title>
 </head>
 <body>
-    <h1>Hello from Jenkins + Docker + ECR Pipeline 🚀</h1>
+    <h1>Hello from Jenkins + Docker + ECR Pipeline</h1>
 </body>
 </html>
 ```
