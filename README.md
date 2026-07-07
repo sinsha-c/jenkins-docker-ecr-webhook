@@ -15,24 +15,9 @@ This project automates the full build-and-release workflow for a company website
 ---
 
 ## 🏗️ Architecture
+> A simple architecture diagram or the Jenkins pipeline stage view showing the end-to-end flow.
 
-```
-Developer                GitHub                    Jenkins                     Amazon ECR
-    │                       │                          │                            │
-    │  git push             │                          │                            │
-    ├──────────────────────►│                          │                            │
-    │                       │   Webhook (POST)         │                            │
-    │                       ├─────────────────────────►│                            │
-    │                       │                          │  1. Checkout SCM           │
-    │                       │                          │  2. docker build           │
-    │                       │                          │  3. docker run (smoke test)│
-    │                       │                          │  4. docker tag             │
-    │                       │                          │  5. docker push            │
-    │                       │                          ├───────────────────────────►│
-    │                       │                          │                            │  Image stored
-```
-
-> 📸 **Add screenshot here:** A simple architecture diagram or the Jenkins pipeline stage view showing the end-to-end flow.
+> <img src="screenshots/cicd_pipeline_architecture.png" width="700"/>
 
 ---
 
@@ -56,6 +41,7 @@ jenkins-docker-ecr-webhook/
 ├── Dockerfile
 ├── index.html
 ├── Jenkinsfile
+├── screenshots
 └── README.md
 ```
 
@@ -72,7 +58,7 @@ git clone https://github.com/<your-username>/jenkins-docker-ecr-webhook.git
 ```
 
 > GitHub repository page showing the three uploaded files.
-> <img src="screenshots/github-initial-commit" width="700"/>
+> <img src="screenshots/github-initial-commit.png" width="700"/>
 
 ---
 
@@ -108,7 +94,7 @@ curl http://localhost:8081
 ```
 
 > Browser view of the running Nginx page.
-> <img src="screenshots/nginx-running-page" width="700"/>
+> <img src="screenshots/nginx-running-page.png" width="700"/>
 
 ---
 
@@ -186,10 +172,10 @@ pipeline {
 3. Created a new Pipeline job — suggested name: nginx-webapp-cicd-pipeline — pointing to the GitHub repository, using the Jenkinsfile from SCM.
 
 > Jenkins pipeline configuration page (Pipeline script from SCM).
-> <img src="screenshots/jenkins-job-config1" width="600"/>
+> <img src="screenshots/jenkins-job-config1.png" width="600"/>
 
 > Jenkins job "Build Triggers" section with the GitHub hook option checked.
-> <img src="screenshots/jenkins-job-config1" width="600"/>
+> <img src="screenshots/jenkins-job-config1.png" width="600"/>
 
 ### AWS Authentication — IAM Role Attached to EC2 (Recommended)
  
@@ -209,7 +195,7 @@ pipeline {
 5. In the Jenkins job: enabled **GitHub hook trigger for GITScm polling** under Build Triggers.
 
 > GitHub webhook configuration screen with a green checkmark (successful delivery).
-> <img src="screenshots/webhook-config" width="700"/>
+> <img src="screenshots/webhook-config.png" width="700"/>
 
 ---
 
@@ -219,22 +205,22 @@ pipeline {
 2. Push the changes to github repo
 
 > git push to test the trigger
-> <img src="screenshots/git-push-to-test-trigger" width="700"/>
+> <img src="screenshots/git-push-to-test-trigger.png" width="700"/>
 
 ---
 
 > Successful pipeline run from jenkins.
-> <img src="screenshots/jenkins-job-success" width="700"/>
+> <img src="screenshots/jenkins-job-success.png" width="700"/>
 
 ---
 
 > Amazon ECR repository showing the pushed image tag(s).
-> <img src="screenshots/image-on-ecr    " width="700"/>
+> <img src="screenshots/image-on-ecr.png" width="700"/>
 
 ---
 
 > GitHub "Recent Deliveries" tab under webhook settings, showing a `200` response.
-> <img src="screenshots/webhook-delivery-status" width="700"/>
+> <img src="screenshots/webhook-delivery-status.png" width="700"/>
 
 ---
 
